@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ResumeFit</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M9.5 14.5l2 2 3.5-4"/>
+        </svg>
+      </span>
+      <span class="brand-name">ResumeFit</span>
+    </div>
+    <div class="topbar-right">
+      <span id="status-pill" class="pill pill-muted">Setting up</span>
+      <button id="btn-settings" class="icon-btn" type="button" title="Settings" aria-label="Settings">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- SETTINGS (doubles as first-run setup) -->
+    <section class="view" data-view="settings" hidden>
+      <div id="setup-intro" class="intro">
+        <h1>Tailor your resume to any job in one click.</h1>
+        <p>Open a job posting, press <strong>Tailor</strong>, and get a fit score, a one-page resume and a cover letter. Free, and nothing leaves your browser.</p>
+      </div>
+      <h2 id="settings-title" class="section-title">Settings</h2>
+
+      <div class="card">
+        <div class="field">
+          <label for="resume">Your resume <span class="hint">plain text or Markdown</span></label>
+          <textarea id="resume" rows="10" placeholder="Paste your resume: name, contact, summary, skills, experience, projects, education."></textarea>
+          <div class="row between">
+            <span id="resume-meta" class="hint">0 words</span>
+            <label class="link-btn" for="resume-file">Import .txt or .md</label>
+            <input id="resume-file" type="file" accept=".txt,.md,.markdown,text/plain,text/markdown" hidden>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="field">
+          <label for="api-key">Gemini API key <span class="hint">optional, unlocks full tailoring</span></label>
+          <div class="input-row">
+            <input id="api-key" type="password" placeholder="AIza…" autocomplete="off" spellcheck="false">
+            <button id="btn-toggle-key" class="ghost-btn" type="button">Show</button>
+            <button id="btn-test-key" class="ghost-btn" type="button">Test</button>
+          </div>
+          <p id="key-status" class="hint"></p>
+          <p class="hint">Get a free key at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>. No card needed, and the free tier covers hundreds of tailorings a day. Without a key you still get the fit score and keyword gaps.</p>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="model">Model</label>
+            <select id="model">
+              <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+              <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="tone">Tone</label>
+            <select id="tone">
+              <option value="confident and concise">Confident</option>
+              <option value="warm and professional">Warm</option>
+              <option value="formal">Formal</option>
+            </select>
+          </div>
+        </div>
+        <label class="check"><input id="cover-letter" type="checkbox" checked> Also write a cover letter</label>
+      </div>
+
+      <div class="actions">
+        <button id="btn-save" class="primary-btn" type="button">Save and continue</button>
+        <button id="btn-wipe" class="danger-link" type="button">Delete all local data</button>
+      </div>
+    </section>
+
+    <!-- HOME -->
+    <section class="view" data-view="home" hidden>
+      <div class="card job-card">
+        <div class="row between">
+          <span class="eyebrow">This page</span>
+          <button id="btn-rescan" class="ghost-btn small" type="button">Rescan</button>
+        </div>
+        <h2 id="job-title" class="job-title">Scanning…</h2>
+        <p id="job-meta" class="job-meta"></p>
+        <p id="job-note" class="note" hidden></p>
+        <details id="job-details">
+          <summary>Job description <span id="job-count" class="hint"></span></summary>
+          <textarea id="job-text" rows="9" placeholder="Paste the job description here if the page could not be read."></textarea>
+        </details>
+      </div>
+
+      <button id="btn-tailor" class="primary-btn big" type="button">Tailor my resume</button>
+      <p id="mode-hint" class="hint center"></p>
+
+      <div id="progress" class="progress" hidden>
+        <div class="progress-bar"><span></span></div>
+        <p id="progress-text">Reading the job…</p>
+      </div>
+      <p id="error" class="error" role="alert" hidden></p>
+
+      <section id="history" class="history" hidden>
+        <h3 class="section-title">Recent</h3>
+        <ul id="history-list"></ul>
+      </section>
+    </section>
+
+    <!-- RESULT -->
+    <section class="view" data-view="result" hidden>
+      <button id="btn-back" class="back-btn" type="button">← Back</button>
+
+      <div class="card score-card">
+        <div class="score-ring">
+          <svg viewBox="0 0 64 64" width="72" height="72" aria-hidden="true">
+            <circle class="ring-bg" cx="32" cy="32" r="27"/>
+            <circle id="ring-fg" class="ring-fg" cx="32" cy="32" r="27"/>
+          </svg>
+          <span id="score-num" class="score-num">0</span>
+        </div>
+        <div class="score-text">
+          <h2 id="result-title" class="job-title"></h2>
+          <p id="result-company" class="job-meta"></p>
+          <span id="verdict" class="pill"></span>
+        </div>
+      </div>
+      <p id="result-summary" class="summary"></p>
+
+      <div class="card">
+        <div class="kw-group">
+          <span class="eyebrow good">Matched</span>
+          <div id="kw-matched" class="chips"></div>
+        </div>
+        <div class="kw-group">
+          <span class="eyebrow warn">Missing</span>
+          <div id="kw-missing" class="chips"></div>
+        </div>
+      </div>
+
+      <div id="offline-cta" class="card cta" hidden>
+        <strong>Want the tailored resume and cover letter?</strong>
+        <p>Add a free Gemini key in Settings. It takes a minute and needs no card.</p>
+        <button id="btn-add-key" class="primary-btn small" type="button">Add a key</button>
+      </div>
+
+      <div id="docs" class="docs">
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-tab="resume" role="tab" type="button">Resume</button>
+          <button class="tab" data-tab="cover" role="tab" type="button">Cover letter</button>
+          <button class="tab" data-tab="insights" role="tab" type="button">Insights</button>
+        </div>
+        <div id="toolbar" class="toolbar">
+          <button id="btn-edit" class="ghost-btn small" type="button">Edit</button>
+          <button id="btn-copy" class="ghost-btn small" type="button">Copy</button>
+          <button id="btn-download" class="ghost-btn small" type="button">Download .md</button>
+          <button id="btn-pdf" class="ghost-btn small accent" type="button">Save as PDF</button>
+        </div>
+        <article id="doc-preview" class="doc"></article>
+        <textarea id="doc-editor" class="doc-editor" hidden spellcheck="true"></textarea>
+        <div id="insights" class="insights" hidden>
+          <h3>Tips</h3>
+          <ul id="tips"></ul>
+          <h3>Likely interview questions</h3>
+          <ul id="questions"></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">Runs in your browser. Your resume and key never leave it.</footer>
+  <div id="toast" class="toast" hidden></div>
+  <script type="module" src="sidepanel.js"></script>
+</body>
+</html>
