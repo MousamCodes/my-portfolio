@@ -36,8 +36,8 @@ export default function Navbar() {
       )}
     >
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-5 sm:px-8">
-        <Link href="/" className="group flex items-center gap-2.5 font-semibold tracking-tight">
-          <Logo size={32} className="transition-transform duration-300 group-hover:rotate-[-6deg] group-hover:scale-105" />
+        <Link href="/" className="flex items-center gap-2.5 font-semibold tracking-tight">
+          <Logo size={32} />
           <span className="hidden sm:inline">{profile.firstName.toUpperCase()}</span>
           <span className="hidden font-mono text-[10px] uppercase tracking-[0.25em] text-muted md:inline">· AI HQ</span>
         </Link>

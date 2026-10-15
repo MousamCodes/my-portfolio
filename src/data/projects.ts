@@ -1,4 +1,4 @@
-export type ProjectCategory = "AI/ML" | "Full-Stack" | "Backend" | "Data" | "Agents";
+export type ProjectCategory = "AI/ML" | "Full-Stack" | "Backend" | "Frontend" | "Data" | "Agents";
 
 export interface CaseStudy {
   problem: string;
@@ -377,6 +377,62 @@ export const projects: Project[] = [
     },
   },
   {
+    slug: "edgerunners",
+    title: "Edgerunners · David & Lucy",
+    tagline: "A cinematic, scroll-driven fan page in pure HTML, CSS and JS",
+    description:
+      "A single-file cyberpunk tribute page: nine scroll chapters with parallax imagery, glitch typography, scanline and film-grain overlays, and the song synced through the YouTube IFrame API behind a sound-on gate. No framework, no build step.",
+    period: "Oct 2026",
+    categories: ["Frontend"],
+    tech: ["HTML", "CSS", "Vanilla JavaScript", "IntersectionObserver", "YouTube IFrame API", "CSS Animations", "Vercel"],
+    featured: false,
+    status: "live",
+    links: { live: "https://edgerunners-david-lucy.vercel.app" },
+    highlights: ["Zero dependencies, ~50 KB page", "Chapter-based parallax storytelling", "Reduced-motion aware"],
+    roleKeywords: ["frontend", "web", "design", "css", "javascript", "ui", "creative", "animation", "html"],
+    caseStudy: {
+      problem:
+        "Most fan pages are a wall of images. The goal was a page that feels like the show: neon, noisy, emotional, with the music playing, and that still loads instantly and works on a phone.",
+      solution:
+        "A hand-written single HTML file. The story is split into chapters that reveal on scroll, each with its own full-bleed artwork, parallax depth and glitching title. Global overlays (scanlines, animated grain, vignette) give the CRT look. A sound-on gate starts the track through the YouTube IFrame API, since browsers block autoplay with audio.",
+      architecture: [
+        "Chapters are sections with data attributes; a fixed HUD shows the current chapter number and name",
+        "IntersectionObserver toggles visible state per chapter, driving CSS transitions and the HUD",
+        "requestAnimationFrame parallax moves background layers at different rates based on scroll position",
+        "Scanlines, film grain (SVG turbulence filter) and vignette are fixed overlays using mix-blend-mode",
+        "Glitch titles use layered pseudo-elements with clip-path keyframes in cyan and magenta",
+        "YouTube IFrame API plays the song after the user clicks the gate; a visualiser bar animates while playing",
+        "A CREATOR config object renders social and support buttons only for links that are filled in",
+      ],
+      features: [
+        "Nine scroll chapters with full-bleed imagery and parallax",
+        "Glitch, drift and pulse animations built in CSS only",
+        "Sound-on gate with synced music and equaliser animation",
+        "Open Graph tags for a rich share preview",
+        "Respects prefers-reduced-motion by disabling grain and glitch",
+        "Config-driven creator section with UPI and social links",
+      ],
+      challenges: [
+        {
+          challenge: "Autoplaying audio is blocked by every browser.",
+          resolution: "A deliberate click-to-enter gate that doubles as the title card; playback starts from that user gesture via the IFrame API.",
+        },
+        {
+          challenge: "Heavy overlays (grain, scanlines, parallax) can tank scroll performance on phones.",
+          resolution: "GPU-friendly transforms only, a single animated grain layer, and everything motion-related switched off under prefers-reduced-motion.",
+        },
+        {
+          challenge: "The song will not play when the file is opened from disk.",
+          resolution: "A one-click local server script and a note in the README so the page always runs over HTTP.",
+        },
+      ],
+      results: [
+        "Live on Vercel, about 50 KB of HTML and CSS plus images, no JavaScript dependencies",
+        "Shows front-end craft outside of frameworks: layout, motion design, media APIs",
+      ],
+    },
+  },
+  {
     slug: "ai-developer-hq",
     title: "AI Developer HQ (this site)",
     tagline: "A portfolio that is itself an AI product",
@@ -411,4 +467,4 @@ export const projects: Project[] = [
 
 export const featuredProjects = projects.filter((p) => p.featured);
 export const getProject = (slug: string) => projects.find((p) => p.slug === slug);
-export const allCategories: ProjectCategory[] = ["AI/ML", "Full-Stack", "Backend", "Agents", "Data"];
+export const allCategories: ProjectCategory[] = ["AI/ML", "Full-Stack", "Backend", "Frontend", "Agents", "Data"];

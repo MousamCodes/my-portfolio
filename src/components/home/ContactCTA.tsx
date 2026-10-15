@@ -24,8 +24,8 @@ export default function ContactCTA() {
             <Button href={profile.socials.github} variant="secondary" size="lg" external>
               <Github className="h-4 w-4" /> GitHub
             </Button>
-            <Button href={profile.socials.x} variant="ghost" size="lg" external>
-              <Twitter className="h-4 w-4" /> X
+            <Button href={profile.socials.x} variant="secondary" size="lg" external>
+              <Twitter className="h-4 w-4" /> Follow on Twitter
             </Button>
           </div>
         </div>
