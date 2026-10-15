@@ -53,15 +53,15 @@ export const profile = {
     },
     {
       group: "Frontend",
-      items: ["React", "Next.js", "Tailwind CSS", "Shadcn UI", "Framer Motion", "Responsive UI"],
+      items: ["React", "Next.js", "Tailwind CSS", "Shadcn UI", "Framer Motion", "Clerk Auth", "Responsive UI"],
     },
     {
       group: "Backend, Data & Cloud",
-      items: ["FastAPI", "Node.js", "Express", "MongoDB", "Firebase", "Prisma ORM", "PostgreSQL", "REST APIs", "WebSockets"],
+      items: ["FastAPI", "Node.js", "Express", "Convex", "MongoDB", "Firebase", "Prisma ORM", "PostgreSQL", "REST APIs", "WebSockets"],
     },
     {
       group: "Workflow & DevOps",
-      items: ["Inngest", "Qdrant", "Git & GitHub", "Docker", "Vercel", "Playwright"],
+      items: ["Inngest", "Qdrant", "Chrome Extensions (MV3)", "Git & GitHub", "Docker", "Vercel", "Playwright"],
     },
   ],
   achievements: [
@@ -71,14 +71,14 @@ export const profile = {
     { label: "Tweets analysed", value: "10K+", detail: "Live sentiment pipeline, ~85% accuracy" },
   ],
   stats: {
-    projects: 6,
+    projects: 8,
     certifications: 3,
     yearsCoding: 3,
   },
   hiringPitch: [
-    "Ships complete products, not demos: Intervo is a deployed real-time voice interview platform with auth, scoring and a dashboard.",
+    "Ships complete products, not demos: Intervo (real-time voice interviews) and Goat Note (PDF study assistant with cited answers) are both deployed with auth, background jobs and dashboards; ResumeFit is a working Chrome extension.",
     "Comfortable across the stack: TypeScript/Next.js frontends, FastAPI/Node backends, Firebase/MongoDB/Postgres data, and TensorFlow/Keras models.",
-    "Hands-on with modern AI engineering: LLM orchestration, RAG with vector search, embeddings, event-driven background jobs and browser agents.",
+    "Hands-on with modern AI engineering: LLM orchestration, RAG with vector search (Convex, Qdrant), embeddings, structured JSON outputs, event-driven background jobs and browser agents.",
     "Strong CS fundamentals (DSA in C++, OOP, DBMS) with an 8.6 CGPA and recognised ML coursework from Stanford/DeepLearning.AI.",
   ],
 } as const;

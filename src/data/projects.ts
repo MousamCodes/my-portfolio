@@ -87,6 +87,119 @@ export const projects: Project[] = [
     },
   },
   {
+    slug: "goat-note",
+    title: "Goat Note",
+    tagline: "Chat with your college PDFs, with page citations",
+    description:
+      "Upload lecture notes, textbooks and past papers, ask questions across any subset of them, and generate exam-style Q&A sets. Every answer cites the page it came from. Deployed with Convex vector search, Clerk auth and Gemini.",
+    period: "Oct 2026",
+    categories: ["AI/ML", "Full-Stack", "Backend"],
+    tech: ["Next.js 16", "Convex", "Vector Search", "Clerk", "Gemini 2.5 Flash", "Gemini Embeddings", "unpdf", "Tailwind CSS 4", "Vercel"],
+    featured: true,
+    status: "live",
+    links: {
+      live: "https://goat-note-theta.vercel.app",
+      github: "https://github.com/MousamCodes/goat-note",
+    },
+    highlights: ["Page-cited RAG answers", "Background PDF ingestion", "Flashcard Q&A generator"],
+    roleKeywords: ["ai", "ml", "llm", "rag", "backend", "full-stack", "fullstack", "nextjs", "react", "javascript", "vector", "search", "convex", "product", "edtech"],
+    caseStudy: {
+      problem:
+        "Students revise from dozens of PDFs: slides, textbooks, past papers. Finding one fact means scrolling through all of them, and generic chatbots cannot see the files or say which page an answer came from.",
+      solution:
+        "Goat Note turns a student's PDFs into a private, searchable study assistant. Files are embedded in the background, questions are answered only from retrieved passages with numbered citations and page chips, and the same passages can be turned into practice Q&A sets with progress tracking.",
+      architecture: [
+        "User signs in with Clerk; every document, passage, message and note is scoped to that account on the server",
+        "PDFs (up to 25 MB, multiple at once) are uploaded to Convex file storage",
+        "A Convex Node action extracts text per page with unpdf and chunks it (~1000 chars, 150 overlap, page-aware)",
+        "Chunks are embedded in batches with Gemini (768 dims) and written to a table with a vector index; the document card updates live",
+        "A question is embedded, Convex vectorSearch returns the top 8 passages filtered to the selected documents",
+        "Gemini 2.5 Flash answers only from those passages, citing [1], [2]; messages stream into the UI from the database",
+        "Q&A mode samples passages evenly and asks Gemini for JSON question/answer pairs stored as a set",
+      ],
+      features: [
+        "Multi-PDF drag-and-drop upload with live processing status",
+        "Ask across any subset of documents with conversation history",
+        "Numbered citations with page chips under every answer",
+        "Practice Q&A: 5 to 20 generated questions, reveal one by one, mark known, track progress",
+        "Autosaving quick notes with pinning, colours and search",
+        "Light and dark mode, responsive layout",
+      ],
+      challenges: [
+        {
+          challenge: "Embedding a 25 MB textbook inside a web request is impossible.",
+          resolution: "Moved extraction, chunking and embedding into a Convex background action with batched embedding calls, so the UI stays responsive and the card updates reactively as work completes.",
+        },
+        {
+          challenge: "Keeping answers honest and traceable.",
+          resolution: "The model receives only the retrieved passages, must cite them by number, and the UI maps citations back to page numbers so students can verify.",
+        },
+        {
+          challenge: "Chunks that cut across pages broke citations.",
+          resolution: "Page-aware chunking with overlap keeps each passage tied to one page while preserving context.",
+        },
+      ],
+      results: [
+        "Deployed on Vercel with Convex; no separate vector database or job queue to run",
+        "End-to-end: auth, upload, ingestion, retrieval, cited answers, Q&A generation and notes",
+      ],
+    },
+  },
+  {
+    slug: "resumefit",
+    title: "ResumeFit",
+    tagline: "Chrome extension that tailors your resume to any job page",
+    description:
+      "Open a job posting, click once, and get a fit score, matched and missing keywords, a tailored one-page resume, a cover letter and likely interview questions. Runs entirely in the browser on the user's own Gemini key, with zero servers.",
+    period: "Oct 2026",
+    categories: ["AI/ML", "Agents", "Full-Stack"],
+    tech: ["JavaScript", "Chrome Extension (MV3)", "Side Panel API", "Gemini API", "JSON Schema", "chrome.storage", "Markdown"],
+    featured: true,
+    status: "complete",
+    links: { github: "https://github.com/MousamCodes/my-portfolio/tree/main/extension" },
+    highlights: ["Fit score 0-100 per listing", "Bring-your-own-key, zero infra", "Works on LinkedIn, Indeed, Internshala, Naukri"],
+    roleKeywords: ["ai", "llm", "frontend", "javascript", "chrome", "extension", "automation", "product", "full-stack", "fullstack", "agent", "agents"],
+    caseStudy: {
+      problem:
+        "Tailoring a resume for every application takes 20 to 30 minutes and most people stop doing it. Existing tools need accounts, subscriptions and uploading your resume to someone else's server.",
+      solution:
+        "A Manifest V3 Chrome extension with a side panel. It reads the job text from the active tab, scores fit locally, and, if the user has pasted a free Gemini key, returns a structured JSON result: tailored resume, cover letter, tips and interview questions. Nothing leaves the browser except the call to Google's API.",
+      architecture: [
+        "Icon click opens the side panel (background service worker)",
+        "activeTab + scripting read the visible job text from LinkedIn, Indeed, Internshala, Naukri, Greenhouse, Lever and most career pages",
+        "Offline matcher computes a keyword fit score from the listing's own vocabulary; no key needed",
+        "With a key, a Gemini REST call with a JSON response schema returns resume, cover letter, keywords, tips and questions",
+        "A tiny safe Markdown renderer shows the editable result; chrome.storage keeps the resume, key and the last 12 results locally",
+        "Export page uses the browser's print-to-PDF; copy and .md download also supported",
+      ],
+      features: [
+        "One-click tailoring from any job page",
+        "Fit score and verdict even without an API key",
+        "Grounding rule: the model may only use facts present in the user's resume",
+        "Editable Markdown output, copy, download or save as PDF",
+        "Minimal permissions: activeTab, scripting, storage, sidePanel and one host permission for the Gemini endpoint",
+      ],
+      challenges: [
+        {
+          challenge: "Job sites render listings very differently and some block scripts.",
+          resolution: "Read the rendered DOM text of the active tab with site-specific selectors and a generic fallback, plus a paste box when a page cannot be read.",
+        },
+        {
+          challenge: "Getting reliable structured output from the model.",
+          resolution: "Used Gemini's JSON schema response mode so the result always parses into the same fields.",
+        },
+        {
+          challenge: "Running free with no backend.",
+          resolution: "Bring-your-own-key design: the user's free Gemini tier covers hundreds of tailorings a day and there is nothing to host.",
+        },
+      ],
+      results: [
+        "Installable from the repo in developer mode; ready for Chrome Web Store submission",
+        "Zero hosting cost and no user data collected",
+      ],
+    },
+  },
+  {
     slug: "notemind",
     title: "NoteMind",
     tagline: "PDF question-answering with RAG and citations",
@@ -95,7 +208,7 @@ export const projects: Project[] = [
     period: "2026",
     categories: ["AI/ML", "Backend", "Full-Stack"],
     tech: ["Next.js", "TypeScript", "Inngest", "OpenAI Embeddings", "Qdrant", "RAG", "Docker"],
-    featured: true,
+    featured: false,
     status: "complete",
     links: {},
     highlights: ["Event-driven ingestion", "Vector search in Qdrant", "Page-level citations"],
@@ -144,7 +257,7 @@ export const projects: Project[] = [
     period: "2026",
     categories: ["Agents", "AI/ML", "Backend"],
     tech: ["Python", "Playwright", "Claude API", "LLM Agents", "openpyxl", "YAML"],
-    featured: true,
+    featured: false,
     status: "in-progress",
     links: {},
     highlights: ["Scores listings 0–100", "Tailored resume PDFs", "Browser form-filling agent"],
@@ -274,7 +387,7 @@ export const projects: Project[] = [
     tech: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "Gemini API", "Embeddings", "RAG", "Vercel"],
     featured: false,
     status: "live",
-    links: { github: "https://github.com/MousamCodes" },
+    links: { live: "https://my-portfolio-ten-mu-77.vercel.app", github: "https://github.com/MousamCodes/my-portfolio" },
     highlights: ["Streaming RAG chat", "Role → project matcher", "Zero-infra, free tier"],
     roleKeywords: ["frontend", "full-stack", "fullstack", "ai", "react", "nextjs", "typescript", "3d", "design", "web"],
     caseStudy: {
